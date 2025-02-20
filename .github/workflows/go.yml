@@ -15,6 +15,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
+    
+    - name: Install X11 Development Headers
+      run: sudo apt-get update && sudo apt-get install -y libx11-dev
 
     - name: Set up Go
       uses: actions/setup-go@v4
