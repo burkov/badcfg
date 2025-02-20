@@ -1,8 +1,6 @@
 package badcfglib
 
 import (
-	"bytes"
-	"encoding/xml"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -120,14 +118,6 @@ func readKdbxConfig(dbPath string, passwordPath string) (map[string]string, erro
 	db := gokeepasslib.NewDatabase()
 	db.Credentials = gokeepasslib.NewPasswordCredentials(password)
 	_ = gokeepasslib.NewDecoder(file).Decode(db)
-
-	if db.Content.Root == nil {
-		// gokeepasslib cant decode incorrect Meta format (some datetimes are missing), but Root is ok
-		// this hack is to decode the Root only and then assign it to the db
-		content := rootOnly{}
-		xml.NewDecoder(bytes.NewBuffer(db.Content.RawData)).Decode(&content)
-		db.Content.Root = &content.Root
-	}
 
 	db.UnlockProtectedEntries()
 
